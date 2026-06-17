@@ -31,8 +31,23 @@ interface loginData {
   data: {
     email: string;
     password: string;
+    access_token: string;
+    refresh_token: string;
   };
-  code:string
+  code: string;
+}
+
+interface loginData2 {
+  success: boolean;
+  message: string;
+  data: {
+    access_token: string;
+    refresh_token: string;
+    userName: string;
+    email: string;
+    phone: string;
+    date_time: string;
+  };
 }
 
 const UserLogin: React.FC = () => {
@@ -121,12 +136,12 @@ const UserLogin: React.FC = () => {
 
     if (emailError || passwordError) {
       dispatch(
-          showNotification({
-            name: "login-error3",
-            message: `Fields are not completed`,
-            severity: "error",
-          }),
-        );
+        showNotification({
+          name: "login-error3",
+          message: `Fields are not completed`,
+          severity: "error",
+        }),
+      );
       return;
     }
 
@@ -144,12 +159,13 @@ const UserLogin: React.FC = () => {
             "Content-Type": "application/json",
           },
           timeout: axiosTimeout,
+
           validateStatus: (status: number) => status < 550,
         },
       );
 
       if (loginResponse.data.success === false) {
-        const serverError = serverErrorMessageFunc(loginResponse.data.message)
+        const serverError = serverErrorMessageFunc(loginResponse.data.message);
         dispatch(
           showNotification({
             name: "login-error1",
@@ -160,9 +176,33 @@ const UserLogin: React.FC = () => {
         return;
       }
 
-
       setEmail("");
       setPassword("");
+
+      const access_token = loginResponse?.data?.data?.access_token;
+
+      const loginData = await axios.get<loginData2>(`${baseUrl}/user/profile`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": access_token ?? "",
+        },
+        timeout: axiosTimeout,
+
+        validateStatus: (status: number) => status < 550,
+      });
+
+      if (loginData.data.success === false) {
+        const serverError = serverErrorMessageFunc(loginResponse.data.message);
+
+        dispatch(
+          showNotification({
+            name: "login-error1",
+            message: `${serverError}`,
+            severity: "error",
+          }),
+        );
+        return;
+      }
 
       dispatch(
         showNotification({
@@ -171,6 +211,8 @@ const UserLogin: React.FC = () => {
           severity: "success",
         }),
       );
+
+      console.log(loginData.data);
     } catch (error) {
       dispatch(
         showNotification({

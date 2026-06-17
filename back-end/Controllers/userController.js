@@ -98,7 +98,7 @@ class userController extends baseController {
         const access_token = generateToken.access_token
         const refresh_token = generateToken.refresh_token
         const data = {
-          "userData" : loginData,
+          //"userData" : loginData,
           "access_token" : access_token,
           "refresh_token" : refresh_token
         }

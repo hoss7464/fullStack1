@@ -1,9 +1,14 @@
 import React from "react";
+import { HomeContainer, HomeMainWrapper } from "./HomeElements";
 
 const Home: React.FC = () => {
     return (
         <>
-        home page 
+        <HomeContainer>
+        <HomeMainWrapper>
+            
+        </HomeMainWrapper>
+        </HomeContainer>
         
         </>
     )
