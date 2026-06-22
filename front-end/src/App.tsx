@@ -10,6 +10,7 @@ import UserChange from "./Pages/UserPage/UserChange";
 import ScrollToTop from "./Core-UI/ScrollToTop";
 import Notifications from "./Components/Notifications/Notifications";
 import Navbar from "./Components/Navbar/Navbar";
+import Sidebar from "./Components/Sidebar/Sidebar";
 import Services from "./Pages/ServicesPage/Services";
 import About from "./Pages/AboutPage/About";
 import Purchase from "./Pages/PurchasePage/Purchase";
@@ -29,6 +30,7 @@ function App() {
         <ScrollToTop />
         <Notifications />
         <Navbar />
+        <Sidebar />
         <Routes>
           <Route path="/" element={<>{<Home />}</>} />
 
