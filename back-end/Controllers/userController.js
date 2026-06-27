@@ -91,26 +91,38 @@ class userController extends baseController {
       //step4 ---> To make user model :
       const objectModel = new UserModel();
       //step5 ---> to get user data from mongoDB :
-      const loginData = await objectModel.login(hashEmail, password)
+      const loginData = await objectModel.login(hashEmail, password);
       //step6 ---> if user id exists :
       if (loginData.user_id) {
-        const generateToken = await token.generate(loginData?.user_id, loginData?.status) 
-        const access_token = generateToken.access_token
-        const refresh_token = generateToken.refresh_token
-        const data = {
-          //"userData" : loginData,
-          "access_token" : access_token,
-          "refresh_token" : refresh_token
-        }
+        const generateToken = await token.generate(
+          loginData?.user_id,
+          loginData?.status,
+        );
+        const access_token = generateToken.access_token;
+        const refresh_token = generateToken.refresh_token;
+
+        res.cookie("access_token", access_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: getEnv("ACCESS_TOKEN_EXPIRE_TIME") * 1000,
+        });
+
+        res.cookie("refresh_token", refresh_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: getEnv("REFRESH_TOKEN_EXPIRE_TIME") * 1000 ,
+        });
 
         return res
-        .status(200)
-        .json({ success: true, message: "login_successful" , data, "is_auth" : 0});
-
+          .status(200)
+          .json({ success: true, message: "login_successful", is_auth: 0 });
       } else {
-        return res.status(400).json({success: false,message: "Invalid_credential", "is_auth" : -3 })
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid_credential", is_auth: -3 });
       }
-    
     } catch (error) {
       return res.status(400).json({ success: false, message: `${error}` });
     }
@@ -120,73 +132,123 @@ class userController extends baseController {
     try {
       //we use userToken which we saved it in AuthMiddleware to retrieve profile data based on access_token which maintains user_id in itself:
       //we use req.userToken to identify the client and retrieve profile data :
-      //we send req.userToken.user_id for mongoDB so that it gives us the  prfile data 
-      const objectModel = new UserModel()
-      const userInfo = await objectModel.getProfile(req?.userToken?.user_id)
-      const email = crypto.decryption(getEnv("SECRET_KEY"), userInfo.email)
-      const phone = crypto.decryption(getEnv("SECRET_KEY"), userInfo.phone)
+      //we send req.userToken.user_id for mongoDB so that it gives us the  prfile data
+      const objectModel = new UserModel();
+      const userInfo = await objectModel.getProfile(req?.userToken?.user_id);
+      const email = crypto.decryption(getEnv("SECRET_KEY"), userInfo.email);
+      const phone = crypto.decryption(getEnv("SECRET_KEY"), userInfo.phone);
       //we must delete _id and password from retrieved data check it later :
       //retrieved data :
       const data = {
-        "userName" : userInfo.username,
-        "email" : email,
-        "phone" : phone,
-        "date_time" : userInfo.register_date_time
-      }
-      return res.status(200).json({success: true, message : "Authentication successful", "data" :data, "is_auth" : 0})
+        userName: userInfo.username,
+        email: email,
+        phone: phone,
+        date_time: userInfo.register_date_time,
+      };
+      return res.status(200).json({
+        success: true,
+        message: "Authentication successful",
+        data: data,
+        is_auth: 0,
+      });
     } catch (e) {
-      return res.status(400).json({success: false, message : "Access denied"})
+      return res.status(400).json({ success: false, message: "Access denied" });
     }
   }
   //------------------------------------------------------------------------------
-    async userRefreshToken(req, res) {
+  async userRefreshToken(req, res) {
     try {
-      //step1 ----> firstly get access_token and refresh_token from request body 
-      const accessToken = req.body.access_token
-      const refreshToken = req.body.refresh_token
+      //step1 ----> firstly get access_token and refresh_token from request body
+      const accessToken = req.cookies.access_token;
+      const refreshToken = req.cookies.refresh_token;
+
+      if (!accessToken || !refreshToken) {
+        return res.status(401).json({
+          success: false,
+          message: "Token not found",
+        });
+      }
       //step2 ----> check if refresh token and access token exist in Redis or not :
-      const key_refresh_token = getEnv("REFRESH_TOKEN_PREFIX") + refreshToken
-      const key_access_token = getEnv("ACCESS_TOKEN_PREFIX") + accessToken
-      const data = await Redis.getHash(key_refresh_token)
+      const key_refresh_token = getEnv("REFRESH_TOKEN_PREFIX") + refreshToken;
+      const key_access_token = getEnv("ACCESS_TOKEN_PREFIX") + accessToken;
+      const data = await Redis.getHash(key_refresh_token);
       //step3 ----> if data?.refresh_token && accessToken === data?.access_token do sth :
       if (data?.refresh_token && accessToken === data?.access_token) {
         //step4 ----> firstly delete previous access_token and refresh_token:
-        await Redis.del(key_access_token)
-        await Redis.del(key_refresh_token)
+        await Redis.del(key_access_token);
+        await Redis.del(key_refresh_token);
         //step5 ----> generate new token :
-        const resultToken = await token.generate(data?.user_id, data?.status)
+        const resultToken = await token.generate(data?.user_id, data?.status);
         if (typeof resultToken === "string") {
-          return res.status(400).json({success: false, message : "Token generate error!"})
+          return res
+            .status(400)
+            .json({ success: false, message: "Token generate error!" });
         } else {
-          const data = {
-            "refresh_token" : resultToken?.refresh_token,
-            "access_token" : resultToken?.access_token
-          }
 
-          return res.status(200).json({success: true, message : "Refresh token has been changed.", data: data})
+          res.cookie("access_token", resultToken.access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: getEnv("ACCESS_TOKEN_EXPIRE_TIME") * 1000,
+          });
+
+          res.cookie("refresh_token", resultToken.refresh_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: getEnv("REFRESH_TOKEN_EXPIRE_TIME") * 1000,
+          });
+
+          return res.status(200).json({
+            success: true,
+            message: "Refresh token has been changed.",
+          });
         }
-        
       } else {
-        return res.status(400).json({success: false, message : "refresh token is invalid"})
+        return res
+          .status(400)
+          .json({ success: false, message: "refresh token is invalid" });
       }
-
-      
     } catch (e) {
-      return res.status(400).json({success: false, message : "Access denied"})
+      return res.status(400).json({ success: false, message: "Access denied" });
     }
   }
   //------------------------------------------------------------------------------
-    async userLogout(req, res) {
+  async userLogout(req, res) {
     try {
-      const key_access_token = getEnv("ACCESS_TOKEN_PREFIX") + req?.userToken?.access_token
-      const key_refresh_token = getEnv("REFRESH_TOKEN_PREFIX") + req?.userToken?.refresh_token
-      
-      await Redis.del(key_refresh_token)
-      await Redis.del(key_access_token)
+      const accessToken = req.cookies.access_token;
+      const refreshToken = req.cookies.refresh_token;
 
-      return res.status(200).json({success: true, message : "Logout successful", "is_auth" : 0})
+      const key_access_token = getEnv("ACCESS_TOKEN_PREFIX") + accessToken;
+      const key_refresh_token = getEnv("REFRESH_TOKEN_PREFIX") + refreshToken;
+
+      if (accessToken) {
+        const key_access_token = getEnv("ACCESS_TOKEN_PREFIX") + accessToken;
+        await Redis.del(key_access_token);
+      }
+
+      if (refreshToken) {
+        const key_refresh_token = getEnv("REFRESH_TOKEN_PREFIX") + refreshToken;
+        await Redis.del(key_refresh_token);
+      }
+
+      res.clearCookie("access_token", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      });
+
+      res.clearCookie("refresh_token", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      });
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Logout successful" });
     } catch (e) {
-      return res.status(400).json({success: false, message : "Access denied"})
+      return res.status(400).json({ success: false, message: "Access denied" });
     }
   }
   //------------------------------------------------------------------------------

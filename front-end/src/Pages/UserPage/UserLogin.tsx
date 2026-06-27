@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import {
   RegisterContainer,
   RegisterWrapper,
@@ -37,21 +39,10 @@ interface loginData {
   code: string;
 }
 
-interface loginData2 {
-  success: boolean;
-  message: string;
-  data: {
-    access_token: string;
-    refresh_token: string;
-    userName: string;
-    email: string;
-    phone: string;
-    date_time: string;
-  };
-}
-
 const UserLogin: React.FC = () => {
   const dispatch = useDispatch();
+  const Navigate = useNavigate();
+  const { login } = useAuth();
   //Email states :
   const [email, setEmail] = useState<string>("");
   const [emailError, setEmailError] = useState<string>("");
@@ -133,7 +124,7 @@ const UserLogin: React.FC = () => {
   //---------------------------------------------------------------------------
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    //step1 ----> validation for email and password :
     if (emailError || passwordError) {
       dispatch(
         showNotification({
@@ -144,13 +135,13 @@ const UserLogin: React.FC = () => {
       );
       return;
     }
-
+    //login payload
     try {
       const loginPayload = {
         email: email,
         password: password,
       };
-
+      //step2 -----> send email and password towards the server to check if the user exists or not :
       const loginResponse = await axios.post<loginData>(
         `${baseUrl}/user/login`,
         loginPayload,
@@ -158,12 +149,12 @@ const UserLogin: React.FC = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          withCredentials: true,
           timeout: axiosTimeout,
-
           validateStatus: (status: number) => status < 550,
         },
       );
-
+      //if user desn't exist , throw and error :
       if (loginResponse.data.success === false) {
         const serverError = serverErrorMessageFunc(loginResponse.data.message);
         dispatch(
@@ -175,34 +166,15 @@ const UserLogin: React.FC = () => {
         );
         return;
       }
-
+      //if user exists refresh email and password input field :
       setEmail("");
       setPassword("");
+      
+      //step4 -----> if access_token is correct send the second request towards the server to get user data
 
-      const access_token = loginResponse?.data?.data?.access_token;
 
-      const loginData = await axios.get<loginData2>(`${baseUrl}/user/profile`, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-token": access_token ?? "",
-        },
-        timeout: axiosTimeout,
-
-        validateStatus: (status: number) => status < 550,
-      });
-
-      if (loginData.data.success === false) {
-        const serverError = serverErrorMessageFunc(loginResponse.data.message);
-
-        dispatch(
-          showNotification({
-            name: "login-error1",
-            message: `${serverError}`,
-            severity: "error",
-          }),
-        );
-        return;
-      }
+      //step5 ----> if the user exists and request is successful use access_token to for login process :
+      await login()
 
       dispatch(
         showNotification({
@@ -212,7 +184,8 @@ const UserLogin: React.FC = () => {
         }),
       );
 
-      console.log(loginData.data);
+      //step6 ----> then navigate to user profile page :
+      Navigate("/userProfile");
     } catch (error) {
       dispatch(
         showNotification({

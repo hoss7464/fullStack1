@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import CORSMiddleware from "./Middleware/cors.js";
 import { Redis } from "./global.js";
 import MongoDB from "./Core/mongoDB.js";
 import { getEnv } from "./Core/utils.js";
 import swaggerUi from "swagger-ui-express";
 import swagger from "./Core/swgger.js";
+
 
 class Application {
   #app = null;
@@ -18,6 +20,8 @@ class Application {
       this.#app.use(express.json({ limit: "10mb" }));
       //to allow express to have POST, PUT, PATCH :
       this.#app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+      //cookie parser middleware : (cookie parser must be before CORS middleware and routes)
+      this.#app.use(cookieParser())
       //cors middleware :
       this.#app.use(new CORSMiddleware().handle)
       //swagger :

@@ -10,10 +10,9 @@ class CORSMiddleware extends BaseMiddleware {
       if (ALLOW_ORIGIN.includes(reqORIGIN)) {
         res.set({
           "Access-Control-Allow-Origin": reqORIGIN,
-          "Access-Control-Allow-Methods":
-            "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-          "Access-Control-Allow-Headers":
-            "Content-Type,X-Token",
+          "Access-Control-Allow-Credentials": "true",
+          "Access-Control-Allow-Methods":"GET,POST,PUT,PATCH,DELETE,OPTIONS",
+          "Access-Control-Allow-Headers":"Content-Type,X-Token",
         });
       }
 

@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { MainContainer } from "./Core-UI/MainContainer";
+import PrivateRoute from "./Routes/PrivateRoute";
+import PublicRoute from "./Routes/PublicRoute";
 import Home from "./Pages/MainPage/Home";
 import UserRegister from "./Pages/UserPage/UserRegister";
 import UserLogin from "./Pages/UserPage/UserLogin";
@@ -14,6 +16,8 @@ import Sidebar from "./Components/Sidebar/Sidebar";
 import Services from "./Pages/ServicesPage/Services";
 import About from "./Pages/AboutPage/About";
 import Purchase from "./Pages/PurchasePage/Purchase";
+import UserProfile from "./Pages/UserProfile/UserProfile";
+import NotFound from "./Pages/ErrorPage/NotFound";
 
 function App() {
   useEffect(() => {
@@ -25,7 +29,6 @@ function App() {
 
   return (
     <>
-      
       <MainContainer>
         <ScrollToTop />
         <Notifications />
@@ -34,14 +37,63 @@ function App() {
         <Routes>
           <Route path="/" element={<>{<Home />}</>} />
 
-          <Route path="/userRegister" element={<>{<UserRegister />}</>} />
-          <Route path="/userLogin" element={<>{<UserLogin />}</>} />
-          <Route path="/userForgot" element={<>{<UserForgot />}</>} />
-          <Route path="/userChange" element={<>{<UserChange />}</>} />
+          <Route
+            path="/userRegister"
+            element={
+              <>
+                {
+                  <PublicRoute>
+                    <UserRegister />
+                  </PublicRoute>
+                }
+              </>
+            }
+          />
+          <Route
+            path="/userLogin"
+            element={
+              <>
+                {
+                  <PublicRoute>
+                    <UserLogin />
+                  </PublicRoute>
+                }
+              </>
+            }
+          />
+          <Route
+            path="/userForgot"
+            element={
+              <>
+                {
+                  <PublicRoute>
+                    <UserForgot />
+                  </PublicRoute>
+                }
+              </>
+            }
+          />
+          {/* <Route path="/userChange" element={<>{<UserChange />}</>} />*/}
+
+          <Route
+            path="/userProfile"
+            element={
+              <>
+                {
+                  <PrivateRoute>
+                    <UserProfile />
+                  </PrivateRoute>
+                }
+              </>
+            }
+          />
 
           <Route path="/about" element={<>{<About />}</>} />
           <Route path="/services" element={<>{<Services />}</>} />
           <Route path="/purchase" element={<>{<Purchase />}</>} />
+
+          {/* The last route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </MainContainer>
     </>

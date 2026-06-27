@@ -11,7 +11,8 @@ export default class AuthMiddleware extends BaseMiddleware {
   async isAuth (req, res, next) {
     try {
         //step1 ----> to get xtoken from headers :
-        let xToken = req.headers['x-token'] ?? ''
+        //let xToken = req.headers['x-token'] ?? ''
+        let xToken = req.cookies.access_token ?? "";
         //if xToken doesn't empty do sth :
         if (xToken !== "") {
             //step2 ----> trim xToken :
@@ -24,6 +25,7 @@ export default class AuthMiddleware extends BaseMiddleware {
             if (userToken?.user_id) {
                 //step5 ----> save userToken to use it in userProfile in userController to retrieve account data based on access_token which maintains user_id in itself:
                  req.userToken = userToken
+                 
                 //step6 ----> let the client pass ...
                  next()
             //if userToken?.user_id doesn't exist throen an error :
