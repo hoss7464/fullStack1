@@ -8,7 +8,7 @@ import {
 import { useAuth } from "../../Context/AuthContext";
 
 const UserProfile: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   return (
     <>
       <ProfileContainer>
@@ -25,7 +25,7 @@ const UserProfile: React.FC = () => {
             <ProfileText>phone : {user?.phone}</ProfileText>
           </ProfileTextWrapper2>
 
-          <button onClick={() => logout()}>log out</button>
+          
         </ProfileTextWrapper>
       </ProfileContainer>
     </>

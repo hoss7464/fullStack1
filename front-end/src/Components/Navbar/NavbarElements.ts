@@ -8,7 +8,9 @@ import { HiPlus, HiMenu } from "react-icons/hi";
 import { GoHomeFill } from "react-icons/go";
 import { SlBasket } from "react-icons/sl";
 import { BiSolidCategory } from "react-icons/bi";
-import { FaCommentDots, FaPhone } from "react-icons/fa";
+import { FaCommentDots, FaPhone, FaUser  } from "react-icons/fa";
+import { LiaSignOutAltSolid } from "react-icons/lia";
+import { IoSettings } from "react-icons/io5";
 
 //------------------------------------------------------------------------
 //Navbar main warppers:
@@ -319,6 +321,30 @@ export const SignUpIcon = styled(HiPlus)`
   height: 16px;
   color: ${ThemeColors.text1};
 `;
+
+export const SignOutSettingWrapper = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+`
+export const SignOutIcon = styled(LiaSignOutAltSolid)`
+  width: 18px;
+  height: 18px;
+  color: ${ThemeColors.text1};
+`;
+
+export const SettingIcon = styled(IoSettings)`
+  width: 18px;
+  height: 18px;
+  color: ${ThemeColors.text1};
+`
+
+export const UserIcon = styled(FaUser)`
+  width: 18px;
+  height: 18px;
+  color: ${ThemeColors.text1};
+`
+
 //------------------------------------------------------------------------
 //Navbar hamburger btn:
 export const HamburgerWrapper1 = styled.div`

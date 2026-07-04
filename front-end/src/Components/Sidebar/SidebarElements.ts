@@ -7,7 +7,9 @@ import { FaArrowRight } from "react-icons/fa6";
 import { HiPlus } from "react-icons/hi";
 import { SlBasket } from "react-icons/sl";
 import { BiSolidCategory } from "react-icons/bi";
-import { FaCommentDots, FaPhone } from "react-icons/fa";
+import { FaCommentDots, FaPhone, FaUser } from "react-icons/fa";
+import { LiaSignOutAltSolid } from "react-icons/lia";
+import { IoSettings } from "react-icons/io5";
 
 //-------------------------------------------------------------------
 // sidebar main components:
@@ -222,6 +224,18 @@ export const SidebarIcon5 = styled(FaPhone)`
   width: 22px;
   height: 22px;
 `;
+
+export const SidebarIcon6 = styled(IoSettings)`
+  width: 16px;
+  height: 16px;
+  color: ${ThemeColors.text1};
+`;
+
+export const SidebarIcon7 = styled(FaUser)`
+  width: 16px;
+  height: 16px;
+  color: ${ThemeColors.text1};
+`;
 //-------------------------------------------------------------------
 //Sidebar signin signup btn :
 export const SignInUpWrapper = styled.div`
@@ -332,3 +346,18 @@ export const SignUpIcon = styled(HiPlus)`
   height: 16px;
   color: ${ThemeColors.text1};
 `;
+
+export const SignOutWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 60%;
+`
+
+export const SignOutIcon = styled(LiaSignOutAltSolid)`
+  width: 16px;
+  height: 16px;
+  color: ${ThemeColors.text1};
+`;
+
+

@@ -17,6 +17,7 @@ import Services from "./Pages/ServicesPage/Services";
 import About from "./Pages/AboutPage/About";
 import Purchase from "./Pages/PurchasePage/Purchase";
 import UserProfile from "./Pages/UserProfile/UserProfile";
+import UserProfileSetting from "./Pages/UserProfile/UserProfileSetting";
 import NotFound from "./Pages/ErrorPage/NotFound";
 
 function App() {
@@ -82,6 +83,19 @@ function App() {
                 {
                   <PrivateRoute>
                     <UserProfile />
+                  </PrivateRoute>
+                }
+              </>
+            }
+          />
+
+          <Route
+            path="/userProfileSetting"
+            element={
+              <>
+                {
+                  <PrivateRoute>
+                    <UserProfileSetting />
                   </PrivateRoute>
                 }
               </>

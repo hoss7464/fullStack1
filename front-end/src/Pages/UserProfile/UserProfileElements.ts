@@ -29,3 +29,13 @@ font-size: 16px;
 font-weight: 600;
 
 `
+//-----------------------------------------------------------------------
+//User profile setting :
+export const UserProfileSettingContainer = styled.div`
+display: flex;
+justify-content: center;
+align-items: center;
+width: 100%;
+height: 700px;
+background-color: ${ThemeColors.background};
+`

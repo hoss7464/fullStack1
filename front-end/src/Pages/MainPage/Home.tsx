@@ -6,7 +6,7 @@ const Home: React.FC = () => {
         <>
         <HomeContainer>
         <HomeMainWrapper>
-            
+            Home page
         </HomeMainWrapper>
         </HomeContainer>
         

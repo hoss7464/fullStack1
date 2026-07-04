@@ -11,6 +11,9 @@ import {
   SidebarIcon2,
   SidebarIcon3,
   SidebarIcon4,
+  SidebarIcon6,
+ SidebarIcon7,
+
 } from "./SidebarElements";
 import SideSearchInput from "./SideSearchInput";
 import SidebarLinks from "./SidebarLinks";
@@ -54,6 +57,18 @@ const Sidebar: React.FC = () => {
                 linkIcon: <SidebarIcon4 className={Location.pathname === "/services" ? "active-color2" : undefined} />,
                 linkPath: "/services",
                 linkText: "Services",
+              },
+              {
+                linkTo: "/userProfileSetting",
+                linkIcon: <SidebarIcon6 className={Location.pathname === "/userProfileSetting" ? "active-color2" : undefined} />,
+                linkPath: "/userProfileSetting",
+                linkText: "Settings",
+              },
+              {
+                linkTo: "/userProfile",
+                linkIcon: <SidebarIcon7 className={Location.pathname === "/userProfile" ? "active-color2" : undefined} />,
+                linkPath: "/userProfile",
+                linkText: "Profile",
               },
             ]}
           />
