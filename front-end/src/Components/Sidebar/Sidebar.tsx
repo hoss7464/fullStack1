@@ -2,7 +2,7 @@ import React from "react";
 import "./Sidebar.css";
 import { useSelector} from "react-redux";
 import type { RootState } from "../../Redux/store/store";
-
+import { useAuth } from "../../Context/AuthContext";
 import { useLocation } from "react-router-dom";
 import {
   SidebarContainer,
@@ -18,12 +18,13 @@ import {
 import SideSearchInput from "./SideSearchInput";
 import SidebarLinks from "./SidebarLinks";
 import SideUserInteraction from "./SideUserInteraction";
+import SidebarAvatar from "./SidebarAvatar";
 
 
 const Sidebar: React.FC = () => {
   const Location = useLocation();
   const isOpen = useSelector((state: RootState) => state.toggle.toggles["sidebar"] || false);
-
+  const {isAuthenticated} = useAuth()
 
   return (
     <>
@@ -31,6 +32,8 @@ const Sidebar: React.FC = () => {
         <SidebarWrapper>
           {/*Sidebar search input */}
           <SideSearchInput />
+          {/*Sidebar avatar */}
+          {isAuthenticated ? <SidebarAvatar /> : null}
           {/*Sidebar links */}
           <SidebarLinks
             links={[

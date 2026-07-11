@@ -9,7 +9,6 @@ import { GoHomeFill } from "react-icons/go";
 import { SlBasket } from "react-icons/sl";
 import { BiSolidCategory } from "react-icons/bi";
 import { FaCommentDots, FaPhone, FaUser  } from "react-icons/fa";
-import { LiaSignOutAltSolid } from "react-icons/lia";
 import { IoSettings } from "react-icons/io5";
 
 //------------------------------------------------------------------------
@@ -327,11 +326,7 @@ display: flex;
 justify-content: center;
 align-items: center;
 `
-export const SignOutIcon = styled(LiaSignOutAltSolid)`
-  width: 18px;
-  height: 18px;
-  color: ${ThemeColors.text1};
-`;
+
 
 export const SettingIcon = styled(IoSettings)`
   width: 18px;
@@ -374,3 +369,11 @@ export const HamburgerIcon = styled(HiMenu)`
   width: 20px;
   height: 20px;
 `;
+//------------------------------------------------------------------------
+//Navbar avatar: 
+export const AvatarWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 1rem;
+`

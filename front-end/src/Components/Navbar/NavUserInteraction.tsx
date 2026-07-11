@@ -12,45 +12,21 @@ import {
   SignUpIconWrapper,
   SignUpIcon,
   SignOutSettingWrapper,
-  SignOutIcon,
-  NavbarLinkIconWrapper,
-  SettingIcon,
-  UserIcon,
+  AvatarWrapper,
 } from "./NavbarElements";
-import Tooltip from "@mui/material/Tooltip";
+import NavAvatar from "./NavAvatar";
 
 const NavUserInteraction: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated } = useAuth();
   return (
     <>
       <SignInUpWrapper>
         {isAuthenticated ? (
           <>
             <SignOutSettingWrapper>
-              <Tooltip title="Settings" placement="bottom">
-                <SignInUpLink
-                  to="/userProfileSetting"
-                  style={{ marginRight: "1rem" }}
-                >
-                  <NavbarLinkIconWrapper>
-                    <SettingIcon />
-                  </NavbarLinkIconWrapper>
-                </SignInUpLink>
-              </Tooltip>
-
-              <Tooltip title="User" placement="bottom">
-                <SignInUpLink to="/userProfile" style={{ marginRight: "1rem" }}>
-                  <NavbarLinkIconWrapper>
-                    <UserIcon />
-                  </NavbarLinkIconWrapper>
-                </SignInUpLink>
-              </Tooltip>
-
-              <Tooltip title="Sign out" placement="bottom">
-                <NavbarLinkIconWrapper onClick={() => logout()}>
-                  <SignOutIcon />
-                </NavbarLinkIconWrapper>
-              </Tooltip>
+              <AvatarWrapper>
+                <NavAvatar />
+              </AvatarWrapper>
             </SignOutSettingWrapper>
           </>
         ) : (
