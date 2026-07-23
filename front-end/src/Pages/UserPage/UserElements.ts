@@ -176,6 +176,9 @@ export const RegisterInput = styled.input`
     font-size: 13px;
     color: ${ThemeColors.text2};
   }
+
+
+
   @media only screen and (min-width: 280px) and (max-width: 1080px) {
     font-size: 13px;
   }

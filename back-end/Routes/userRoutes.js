@@ -13,6 +13,6 @@ route.post("/refresh-token", new RateLimit("user_login", 3, 60, 60).handle ,user
 route.get("/logout",userController.userLogout);
 
 route.post("/forgot", new RateLimit("user_login", 3, 60, 60).handle ,userController.userForgotPassword);
-route.post("/change", userController.userChangePassword);
+route.post("/change",new AuthMiddleware().isAuth, new RateLimit("user_login", 3, 60, 60).handle, userController.userChangePassword);
 
 export default route;

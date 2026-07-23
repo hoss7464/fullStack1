@@ -3,7 +3,6 @@ import { useAuth } from "../../Context/AuthContext";
 import { Avatar, Menu, MenuItem, Box, Typography } from "@mui/material";
 import { ThemeColors } from "../../Core-UI/Theme";
 import { SignInUpLink, SignInTextWrapper, SignInText } from "./NavbarElements";
-import avatarTestImage from "../../assets/png/Person2.jpg";
 import { truncate2 } from "../../Utils/truncate";
 
 const NavAvatar: React.FC = () => {
@@ -30,7 +29,6 @@ const NavAvatar: React.FC = () => {
         }}
       >
         <Avatar
-          src={avatarTestImage}
           alt={user?.userName}
           sx={{
             cursor: "pointer",
@@ -40,9 +38,8 @@ const NavAvatar: React.FC = () => {
             color: `${ThemeColors.text1}`,
           }}
           onMouseEnter={handleMouseEnter}
-        >
-          H
-        </Avatar>
+        />
+          
         <Typography
           variant="body2"
           sx={{

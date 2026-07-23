@@ -291,43 +291,7 @@ class userController extends baseController {
       //step1 ---> to get data from front-end :
       const data = req.body;
       //step2 ---> Validate data
-      const { error } = changeValidation.validate(data, { abortEarly: false });
-      if (error) {
-        return res.status(400).json({
-          success: false,
-          message: "validation{failed",
-          errors: error.details.map((e) => e.message),
-        });
-      }
-      //step3 ---> destructure data :
-      const email = data.email;
-      const oldPass = data.oldPassword;
-      const newPass = data.newPassword;
-      //step4 ---> to make object out of model :
-      const objectModel = new UserModel();
-      //step5 ---> to hash email
-      const hashEmail = crypto.hash(email);
-      //step6 ---> to find user based on email if user exists on database or not :
-      const user = await objectModel.findUser(hashEmail);
-      if (!user) {
-        return res.status(400).json({
-          success: false,
-          message: "invalid_credentials",
-        });
-      }
-      //step7 ---> to check if old password exists and correct in database or not :
-      const isOldCorrect = await bcrypt.compare(oldPass, user.password);
-      if (!isOldCorrect) {
-        return res.status(400).json({
-          success: false,
-          message: "incorrect_old_password",
-        });
-      }
-      //step8 ---> to hash new password
-      const newPassHash = await bcrypt.hash(newPass, 10);
-      //step9 ---> updata password on mongoDB :
-      await objectModel.updatePass(hashEmail, newPassHash);
-
+     
       return res.status(200).json({
         success: true,
         message: "change_password_successful",

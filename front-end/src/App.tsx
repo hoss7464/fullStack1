@@ -8,7 +8,6 @@ import Home from "./Pages/MainPage/Home";
 import UserRegister from "./Pages/UserPage/UserRegister";
 import UserLogin from "./Pages/UserPage/UserLogin";
 import UserForgot from "./Pages/UserPage/UserForgot";
-import UserChange from "./Pages/UserPage/UserChange";
 import ScrollToTop from "./Core-UI/ScrollToTop";
 import Notifications from "./Components/Notifications/Notifications";
 import Navbar from "./Components/Navbar/Navbar";
